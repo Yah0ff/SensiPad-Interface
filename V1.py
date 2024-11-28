@@ -21,19 +21,30 @@ z_right = gaussian_filter(z_right, sigma=5)
 def generar_pdf():
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_font("Arial", size=12)
+    
+    # Agregar un encabezado con el nombre del informe
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(200, 10, txt="Informe Médico de Presión Plantar", ln=True, align='C')
+    pdf.ln(10)  # Añadir espacio después del encabezado
 
-    # Agregar información al PDF
-    pdf.cell(200, 10, txt="Reporte de Presión Plantar", ln=True, align='C')
+    # Establecer un formato más formal para el cuerpo del informe
+    pdf.set_font("Arial", size=12)
+    
+    # Información personal
     pdf.cell(200, 10, txt=f"Nombre: {nombre_var.get()}", ln=True)
     pdf.cell(200, 10, txt=f"Edad: {edad_var.get()}", ln=True)
     pdf.cell(200, 10, txt=f"Sexo: {sexo_var.get()}", ln=True)
-    pdf.cell(200, 10, txt=f"Peso: {peso_var.get()}", ln=True)
-    pdf.cell(200, 10, txt=f"Altura: {altura_var.get()}", ln=True)
+    pdf.cell(200, 10, txt=f"Peso: {peso_var.get()} kg", ln=True)
+    pdf.cell(200, 10, txt=f"Altura: {altura_var.get()} cm", ln=True)
     pdf.cell(200, 10, txt=f"Diagnóstico previo: {diagnostico_var.get()}", ln=True)
     pdf.cell(200, 10, txt=f"Actividad física: {actividad_var.get()}", ln=True)
 
-    # Generar las gráficas como imágenes
+    # Insertar una línea separadora
+    pdf.set_draw_color(0, 0, 0)
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+    pdf.ln(10)
+
+    # Agregar las gráficas de presión plantar como imágenes
     buf = io.BytesIO()
     fig, axes = plt.subplots(1, 2, figsize=(10, 5))
     c1 = axes[0].imshow(z_left, cmap='jet', interpolation='bilinear')
@@ -49,15 +60,19 @@ def generar_pdf():
     buf.seek(0)
     img = Image.open(buf)
 
-    # Agregar la imagen al PDF
+    # Guardar la imagen y agregarla al PDF
     img_path = "temp_img.png"
     img.save(img_path)
-    pdf.image(img_path, x=10, y=80, w=180)
+    pdf.image(img_path, x=10, y=pdf.get_y(), w=180)
 
-    # Guardar el PDF
+    # Agregar otro separador después de las imágenes
+    pdf.ln(10)
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+    
+    # Guardar el archivo PDF
     nombre_archivo = f"Informe_{nombre_var.get()}.pdf"
     pdf.output(nombre_archivo)
-    messagebox.showinfo("Éxito", "El PDF se ha generado correctamente.")
+    messagebox.showinfo("Éxito", f"El PDF se ha generado correctamente: {nombre_archivo}")
 
 def mostrar_informacion():
     info = tk.Toplevel(root)
@@ -110,11 +125,11 @@ def crear_interfaz_principal():
     frame_info = tk.Frame(root)
     frame_info.pack(pady=10)
 
-    # Fila 1 (Nombre)   
+    # Fila 1 (Nombre)
     tk.Label(frame_info, text="Nombre:").grid(row=0, column=0, padx=5, pady=5, sticky="e")
     tk.Entry(frame_info, textvariable=nombre_var).grid(row=0, column=1, padx=5, pady=5)
 
-    #  Fila 2 (Edad, Sexo, Peso, Altura)
+    # Fila 2 (Edad, Sexo, Peso, Altura)
     tk.Label(frame_info, text="Edad:").grid(row=1, column=0, padx=5, pady=5, sticky="e")
     tk.Entry(frame_info, textvariable=edad_var).grid(row=1, column=1, padx=5, pady=5)
 
@@ -127,14 +142,13 @@ def crear_interfaz_principal():
     tk.Label(frame_info, text="Altura:").grid(row=1, column=6, padx=5, pady=5, sticky="e")
     tk.Entry(frame_info, textvariable=altura_var).grid(row=1, column=7, padx=5, pady=5)
 
-# Fila 3 (Actividad física)
+    # Fila 3 (Actividad física)
     tk.Label(frame_info, text="Actividad física:").grid(row=2, column=0, padx=5, pady=5, sticky="e")
     tk.Entry(frame_info, textvariable=actividad_var).grid(row=2, column=1, columnspan=3, padx=5, pady=5)
 
-# Fila 4 (Diagnóstico previo)
+    # Fila 4 (Diagnóstico previo)
     tk.Label(frame_info, text="Diagnóstico previo:").grid(row=3, column=0, padx=5, pady=5, sticky="e")
     tk.Entry(frame_info, textvariable=diagnostico_var).grid(row=3, column=1, columnspan=3, padx=5, pady=5)
-
 
     # Botones
     tk.Button(root, text="Generar PDF", command=generar_pdf).pack(pady=10)
@@ -152,24 +166,26 @@ def crear_interfaz_principal():
     plt.tight_layout()
 
     canvas = FigureCanvasTkAgg(fig, master=root)
+    canvas.get_tk_widget().pack(pady=10)
     canvas.draw()
-    canvas.get_tk_widget().pack()
 
     root.mainloop()
 
-# Ventana de inicio
+# Ventana de inicio de sesión
 ventana_inicio = tk.Tk()
 ventana_inicio.title("Inicio de Sesión")
-ventana_inicio.geometry("300x200")
+ventana_inicio.geometry("400x250")
 
+# Variables de inicio de sesión
 usuario_var = tk.StringVar()
 contrasena_var = tk.StringVar()
 
+# Formulario de inicio de sesión
 tk.Label(ventana_inicio, text="Usuario:").pack(pady=5)
 tk.Entry(ventana_inicio, textvariable=usuario_var).pack(pady=5)
 tk.Label(ventana_inicio, text="Contraseña:").pack(pady=5)
 tk.Entry(ventana_inicio, textvariable=contrasena_var, show="*").pack(pady=5)
-tk.Button(ventana_inicio, text="Iniciar Sesión", command=iniciar_sesion).pack(pady=20)
 
-ventana_inicio.protocol("WM_DELETE_WINDOW", ventana_inicio.destroy)
+tk.Button(ventana_inicio, text="Iniciar sesión", command=iniciar_sesion).pack(pady=10)
+
 ventana_inicio.mainloop()
