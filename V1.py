@@ -40,7 +40,7 @@ def generar_pdf():
 
     pdf.set_font('Arial','B',15)
     pdf.set_text_color(255, 255, 255)
-    pdf.text(x=75,y=37,txt='INFORME DE RESULTADOS')
+    pdf.text(x=70,y=37,txt='INFORME DE RESULTADOS')
 
     pdf.set_font('Arial','',8)
     pdf.set_text_color(12, 50, 86)
@@ -53,26 +53,35 @@ def generar_pdf():
     pdf.text(x=20,y=62,txt='Diagnóstico anterior:')
 
     pdf.set_line_width(0.2)
-    pdf.line(33,47,140,47)
-    pdf.line(160,47,190,47)
-    pdf.line(30,52,90,52)
-    pdf.line(105,52,145,52)
-    pdf.line(165,52,190,52)
-    pdf.line(43,57,190,57)
-    pdf.line(50,62,190,62)
+    pdf.line(33,48,140,48)
+    pdf.line(160,48,190,48)
+    pdf.line(30,53,90,53)
+    pdf.line(105,53,145,53)
+    pdf.line(165,53,190,53)
+    pdf.line(43,58,190,58)
+    pdf.line(50,63,190,63)
 
-    pdf.set_line_width(0.5)
-    pdf.line(10,65,200,65)
+    pdf.text(x=33,y=47,txt=nombre_var.get())
+    pdf.text(x=160,y=47,txt=edad_var.get())
+    pdf.text(x=30,y=52,txt=sexo_var.get())
+    pdf.text(x=105,y=52,txt=peso_var.get())
+    pdf.text(x=165,y=52,txt=altura_var.get())
+    pdf.text(x=43,y=57,txt=actividad_var.get())
+    pdf.text(x=50,y=62,txt=diagnostico_var.get())
 
-    pdf.image('temp_img.png',x=5,y=100,w=200,h=100)
+    pdf.image('presion.png',x=5,y=100,w=200,h=100)
 
     pdf.set_font('Arial','B',8)
     pdf.set_text_color(12, 50, 86)
-    pdf.text(x=20,y=250,txt='SensiPad recomienda que todo resultado obtenido sea evaluado e interpretado por un médico')
+    pdf.text(x=12,y=265,txt='SensiPad recomienda que todo resultado obtenido sea evaluado e interpretado por un médico')
+
+    pdf.rect(10,270,190,10,'F')
+
+    pdf.set_text_color(255, 255, 255)
+    pdf.text(x=97,y=276,txt='www.sensipad.com')
 
     # Guardar el archivo PDF
-    #nombre_archivo = f"Informe_{nombre_var.get()}.pdf"
-    nombre_archivo = f"Info.pdf"
+    nombre_archivo = f"Informe_{nombre_var.get()}.pdf"
     pdf.output(nombre_archivo)
     messagebox.showinfo("Éxito", f"El PDF se ha generado correctamente: {nombre_archivo}")
 
@@ -157,16 +166,25 @@ def crear_interfaz_principal():
     tk.Button(root, text="Generar PDF", command=generar_pdf).pack(pady=10)
     tk.Button(root, text="Mostrar Información", command=mostrar_informacion).pack(pady=10)
 
-    # Gráficas de presión plantar
-    fig, axes = plt.subplots(1, 2, figsize=(10, 5))
+    fig, axes = plt.subplots(1, 2, figsize=(10, 5), gridspec_kw={'width_ratios': [1, 1.1]})
+# Nota: el ajuste en `width_ratios` permite compensar el espacio de la barra de color.
+
+# Subplot del pie izquierdo
     c1 = axes[0].imshow(z_left, cmap='jet', interpolation='bilinear')
     axes[0].set_title('Pie Izquierdo')
     axes[0].axis('off')
+
+# Subplot del pie derecho
     c2 = axes[1].imshow(z_right, cmap='jet', interpolation='bilinear')
     axes[1].set_title('Pie Derecho')
     axes[1].axis('off')
+
+# Barra de color para el segundo gráfico
     fig.colorbar(c2, ax=axes[1], fraction=0.046, pad=0.04)
+
+# Ajustar el diseño para que los subplots queden alineados
     plt.tight_layout()
+    fig.savefig('presion.png', dpi=100, bbox_inches='tight')
 
     canvas = FigureCanvasTkAgg(fig, master=root)
     canvas.get_tk_widget().pack(pady=10)
@@ -176,7 +194,6 @@ def crear_interfaz_principal():
 
 # Ventana de inicio de sesión
 ventana_inicio = tk.Tk()
-generar_pdf()
 ventana_inicio.title("Inicio de Sesión")
 ventana_inicio.geometry("400x250")
 
