@@ -18,61 +18,64 @@ z_right = np.exp(-((x - 0.3)**2 + (y - 0.5)**2) * 30) + np.exp(-((x - 0.6)**2 + 
 z_left = gaussian_filter(z_left, sigma=5)
 z_right = gaussian_filter(z_right, sigma=5)
 
+
 def generar_pdf():
-    pdf = FPDF()
+    pdf = FPDF(orientation='P',unit='mm',format='A4')
     pdf.add_page()
-    
-    # Agregar un encabezado con el nombre del informe
-    pdf.set_font("Arial", 'B', 16)
-    pdf.cell(200, 10, txt="Informe Médico de Presión Plantar", ln=True, align='C')
-    pdf.ln(10)  # Añadir espacio después del encabezado
 
-    # Establecer un formato más formal para el cuerpo del informe
-    pdf.set_font("Arial", size=12)
-    
-    # Información personal
-    pdf.cell(200, 10, txt=f"Nombre: {nombre_var.get()}", ln=True)
-    pdf.cell(200, 10, txt=f"Edad: {edad_var.get()}", ln=True)
-    pdf.cell(200, 10, txt=f"Sexo: {sexo_var.get()}", ln=True)
-    pdf.cell(200, 10, txt=f"Peso: {peso_var.get()} kg", ln=True)
-    pdf.cell(200, 10, txt=f"Altura: {altura_var.get()} cm", ln=True)
-    pdf.cell(200, 10, txt=f"Diagnóstico previo: {diagnostico_var.get()}", ln=True)
-    pdf.cell(200, 10, txt=f"Actividad física: {actividad_var.get()}", ln=True)
+    pdf.image('Logo.png',x=10,y=10,w=10,h=10)
+    pdf.set_font('Arial','B',25)
+    pdf.set_text_color(74, 136, 156)
+    pdf.text(x=22,y=18,txt='Sensi')
+    pdf.set_text_color(12, 50, 86)
+    pdf.text(x=46,y=18,txt='Pad')
 
-    # Insertar una línea separadora
-    pdf.set_draw_color(0, 0, 0)
-    pdf.line(10, pdf.get_y(), 200, pdf.get_y())
-    pdf.ln(10)
+    pdf.set_line_width(0.5)
+    pdf.set_draw_color(12, 50, 86)
+    pdf.set_fill_color(12, 50, 86)
+    pdf.rect(10,30,190,10,'F')
 
-    # Agregar las gráficas de presión plantar como imágenes
-    buf = io.BytesIO()
-    fig, axes = plt.subplots(1, 2, figsize=(10, 5))
-    c1 = axes[0].imshow(z_left, cmap='jet', interpolation='bilinear')
-    axes[0].set_title('Pie Izquierdo')
-    axes[0].axis('off')
-    c2 = axes[1].imshow(z_right, cmap='jet', interpolation='bilinear')
-    axes[1].set_title('Pie Derecho')
-    axes[1].axis('off')
-    fig.colorbar(c2, ax=axes[1], fraction=0.046, pad=0.04)
-    plt.tight_layout()
-    fig.savefig(buf, format="png")
-    plt.close(fig)
-    buf.seek(0)
-    img = Image.open(buf)
+    pdf.ellipse(5,30,10,10,'F')
+    pdf.ellipse(195,30,10,10,'F')
 
-    # Guardar la imagen y agregarla al PDF
-    img_path = "temp_img.png"
-    img.save(img_path)
-    pdf.image(img_path, x=10, y=pdf.get_y(), w=180)
+    pdf.set_font('Arial','B',15)
+    pdf.set_text_color(255, 255, 255)
+    pdf.text(x=75,y=37,txt='INFORME DE RESULTADOS')
 
-    # Agregar otro separador después de las imágenes
-    pdf.ln(10)
-    pdf.line(10, pdf.get_y(), 200, pdf.get_y())
-    
+    pdf.set_font('Arial','',8)
+    pdf.set_text_color(12, 50, 86)
+    pdf.text(x=20,y=47,txt='Nombre:')
+    pdf.text(x=150,y=47,txt='Edad:')
+    pdf.text(x=20,y=52,txt='Sexo:')
+    pdf.text(x=95,y=52,txt='Peso:')
+    pdf.text(x=150,y=52,txt='Estatura:')
+    pdf.text(x=20,y=57,txt='Actividad física:')
+    pdf.text(x=20,y=62,txt='Diagnóstico anterior:')
+
+    pdf.set_line_width(0.2)
+    pdf.line(33,47,140,47)
+    pdf.line(160,47,190,47)
+    pdf.line(30,52,90,52)
+    pdf.line(105,52,145,52)
+    pdf.line(165,52,190,52)
+    pdf.line(43,57,190,57)
+    pdf.line(50,62,190,62)
+
+    pdf.set_line_width(0.5)
+    pdf.line(10,65,200,65)
+
+    pdf.image('temp_img.png',x=5,y=100,w=200,h=100)
+
+    pdf.set_font('Arial','B',8)
+    pdf.set_text_color(12, 50, 86)
+    pdf.text(x=20,y=250,txt='SensiPad recomienda que todo resultado obtenido sea evaluado e interpretado por un médico')
+
     # Guardar el archivo PDF
-    nombre_archivo = f"Informe_{nombre_var.get()}.pdf"
+    #nombre_archivo = f"Informe_{nombre_var.get()}.pdf"
+    nombre_archivo = f"Info.pdf"
     pdf.output(nombre_archivo)
     messagebox.showinfo("Éxito", f"El PDF se ha generado correctamente: {nombre_archivo}")
+
 
 def mostrar_informacion():
     info = tk.Toplevel(root)
@@ -173,6 +176,7 @@ def crear_interfaz_principal():
 
 # Ventana de inicio de sesión
 ventana_inicio = tk.Tk()
+generar_pdf()
 ventana_inicio.title("Inicio de Sesión")
 ventana_inicio.geometry("400x250")
 
