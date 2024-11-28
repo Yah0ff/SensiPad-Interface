@@ -26,13 +26,12 @@ def iniciar_sesion():
     
     if usuario == "x" and contrasena == "x":
         ventana_login.destroy()
-        mostrar_interfaz_principal()  # Iniciar la interfaz principal si la sesión es correcta
+        mostrar_interfaz_principal() 
     else:
         messagebox.showerror("Error", "Nombre de usuario o contraseña incorrectos")
 
 # Función para generar el archivo PDF
 def generar_pdf(fig):
-    # Obtener los valores ingresados
     nombre = nombre_var.get()
     edad = edad_var.get()
     sexo = sexo_var.get()
@@ -97,7 +96,6 @@ def mostrar_interfaz_principal():
     app = tk.Tk()
     app.title("Distribución de Presión Plantar")
 
-    # Variables globales después de la inicialización de la ventana
     global nombre_var, edad_var, sexo_var, peso_var, altura_var, diagnostico_var, actividad_var
 
     nombre_var = tk.StringVar()
@@ -111,12 +109,16 @@ def mostrar_interfaz_principal():
     frame_top = tk.Frame(app)
     frame_top.pack(pady=10)
 
-    # Fila 1: Nombre
+    ##################################################################################################################################################
+
+    # Cuadros de texto para información del paciente
+
+    # Nombre
     tk.Label(frame_top, text="Nombre", font=("Arial", 10)).grid(row=0, column=0, sticky="w", padx=10, pady=5)
     nombre_entry = tk.Entry(frame_top, textvariable=nombre_var, font=("Arial", 10))
     nombre_entry.grid(row=0, column=1, columnspan=3, sticky="we", padx=10, pady=5)
 
-    # Fila 2: Edad, Sexo, Peso, Altura
+    # Edad, Sexo, Peso, Altura
     tk.Label(frame_top, text="Edad", font=("Arial", 10)).grid(row=1, column=0, sticky="w", padx=10, pady=5)
     tk.Entry(frame_top, textvariable=edad_var, font=("Arial", 10), width=5).grid(row=1, column=1, sticky="w", padx=5, pady=5)
 
@@ -129,11 +131,11 @@ def mostrar_interfaz_principal():
     tk.Label(frame_top, text="Altura (cm)", font=("Arial", 10)).grid(row=1, column=6, sticky="w", padx=10, pady=5)
     tk.Entry(frame_top, textvariable=altura_var, font=("Arial", 10), width=5).grid(row=1, column=7, sticky="w", padx=5, pady=5)
 
-    # Fila 3: Diagnóstico previo
+    # Diagnóstico previo
     tk.Label(frame_top, text="Diagnóstico previo", font=("Arial", 10)).grid(row=2, column=0, sticky="w", padx=10, pady=5)
     tk.Entry(frame_top, textvariable=diagnostico_var, font=("Arial", 10)).grid(row=2, column=1, columnspan=7, sticky="we", padx=10, pady=5)
 
-    # Fila 4: Actividad física habitual
+    # Actividad física habitual
     tk.Label(frame_top, text="Actividad física habitual", font=("Arial", 10)).grid(row=3, column=0, sticky="w", padx=10, pady=5)
     tk.Entry(frame_top, textvariable=actividad_var, font=("Arial", 10)).grid(row=3, column=1, columnspan=7, sticky="we", padx=10, pady=5)
 
