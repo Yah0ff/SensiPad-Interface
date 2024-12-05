@@ -15,6 +15,7 @@ from email import encoders
 from email.mime.text import MIMEText
 import os
 from dotenv import load_dotenv
+from tkinter import font
 
 load_dotenv()
 
@@ -183,12 +184,26 @@ def iniciar_sesion():
     else:
         messagebox.showerror("Error", "Usuario o contraseña incorrectos")
 
+def abrir_recuperar_contrasena():
+    # Crear una nueva ventana para recuperar contraseña
+    ventana_recuperar = tk.Toplevel(ventana_inicio)
+    ventana_recuperar.title("Recuperar Contraseña")
+    ventana_recuperar.geometry("300x200")
+    ventana_recuperar.config(bg="#484454")
+    
+    tk.Label(ventana_recuperar, text="Recuperar Contraseña", font=("Arial", 16, "bold"), bg="#484454", fg="white").pack(pady=20)
+    tk.Label(ventana_recuperar, text="Introduce tu correo electrónico para restablecer\n tu contraseña.", font=("Arial", 12), bg="#484454", fg="white", justify="center").pack(pady=10)
+    tk.Entry(ventana_recuperar, font=("Arial", 12)).pack(pady=10)
+    tk.Button(ventana_recuperar, text="Enviar", font=("Arial", 12, "bold"), bg="#0b3d91", fg="white").pack(pady=20)
+
+# Crear la ventana principal
+
 def crear_interfaz_principal():
     global root, nombre_var, edad_var, sexo_var, peso_var, altura_var, diagnostico_var, actividad_var , destinatario_var
 
     # Crear la ventana principal
     root = tk.Tk()
-    root.title("Interfaz de Presión Plantar")
+    root.title("SensiPad")
     root.geometry("900x900")
     root.protocol("WM_DELETE_WINDOW", cerrar_aplicacion)
 
@@ -268,22 +283,97 @@ def crear_interfaz_principal():
 
     root.mainloop()
 
+def mover_ventana(event):
+    # Calculamos la diferencia entre la posición del puntero y la posición inicial del clic
+    nueva_x = ventana_inicio.winfo_x() + event.x - offset_x
+    nueva_y = ventana_inicio.winfo_y() + event.y - offset_y
+    ventana_inicio.geometry(f"+{nueva_x}+{nueva_y}")
+
+def iniciar_arrastre(event):
+    # Guardamos la diferencia entre la posición del puntero y la esquina superior izquierda de la ventana
+    global offset_x, offset_y
+    offset_x = event.x
+    offset_y = event.y
+
 # Ventana de inicio de sesión
 ventana_inicio = tk.Tk()
 ventana_inicio.title("Inicio de Sesión")
-ventana_inicio.geometry("400x250")
+ventana_width = 500
+ventana_height = 350
+pantalla_width = ventana_inicio.winfo_screenwidth()
+pantalla_height = ventana_inicio.winfo_screenheight()
+pos_x = (pantalla_width // 2) - (ventana_width // 2)
+pos_y = (pantalla_height // 2) - (ventana_height // 2)
+ventana_inicio.geometry(f"{ventana_width}x{ventana_height}+{pos_x}+{pos_y}")
+ventana_inicio.configure(bg="#484454")
+ventana_inicio.resizable(False, False)
+ventana_inicio.overrideredirect(True)
+
+
+barra_titulo = tk.Frame(ventana_inicio, bg="#484454", relief="raised", bd=0)
+barra_titulo.pack(fill="x", pady=5)
+# Crear un Label en la barra de título
+titulo = tk.Label(barra_titulo, text="Login", fg="white", bg="#484454")
+titulo.pack(side="left", padx=10)
+
+# Permitir mover la ventana con la barra de título
+barra_titulo.bind("<Button-1>", iniciar_arrastre)  # Iniciar el arrastre
+barra_titulo.bind("<B1-Motion>", mover_ventana)  # Mover la ventana
 
 # Variables de inicio de sesión
 usuario_var = tk.StringVar()
 contrasena_var = tk.StringVar()
 
-# Formulario de inicio de sesión
-tk.Label(ventana_inicio, text="Usuario:").pack(pady=5)
-tk.Entry(ventana_inicio, textvariable=usuario_var).pack(pady=5)
-tk.Label(ventana_inicio, text="Contraseña:").pack(pady=5)
-tk.Entry(ventana_inicio, textvariable=contrasena_var, show="*").pack(pady=5)
+# Encabezado
+encabezado = tk.Label(ventana_inicio, text="USER LOGIN", font=("Code Saver",35), bg="#484454", fg="white")
+encabezado.pack(pady=1)
+subtitulo = tk.Label(ventana_inicio, text="Bienvenido a SensiPad", font=("Modern Sans", 14), bg="#484454", fg="white")
+subtitulo.pack(pady=1)
 
-tk.Button(ventana_inicio, text="Iniciar sesión", command=iniciar_sesion).pack(pady=10)
+
+# Crear marco con esquinas redondeadas
+def create_rounded_frame(parent, width, height, radius=20, bg_color="#605c74"):
+    canvas = tk.Canvas(parent, width=width, height=height, bg=ventana_inicio.cget("bg"), highlightthickness=0)
+
+    # Dibujar esquinas redondeadas y fondo del marco
+    canvas.create_arc((0, 0, radius * 2, radius * 2), start=90, extent=90, fill=bg_color, outline=bg_color)
+    canvas.create_arc((width - radius * 2, 0, width, radius * 2), start=0, extent=90, fill=bg_color, outline=bg_color)
+    canvas.create_arc((0, height - radius * 2, radius * 2, height), start=180, extent=90, fill=bg_color, outline=bg_color)
+    canvas.create_arc((width - radius * 2, height - radius * 2, width, height), start=270, extent=90, fill=bg_color, outline=bg_color)
+    canvas.create_rectangle((radius, 0, width - radius, height), fill=bg_color, outline=bg_color)
+    canvas.create_rectangle((0, radius, width, height - radius), fill=bg_color, outline=bg_color)
+
+    # Retornar canvas
+    return canvas
+
+
+# Marco del formulario
+frame_width = 400
+frame_height = 100
+rounded_frame = create_rounded_frame(ventana_inicio, width=frame_width, height=frame_height, radius=20, bg_color="#605c74")
+rounded_frame.pack(pady=10)
+
+# Agregar un Frame dentro del Canvas para widgets
+frame_form = tk.Frame(rounded_frame, bg="#605c74")
+frame_form.place(x=10, y=10, width=frame_width - 20, height=frame_height - 20)
+
+# Campo de Usuario
+tk.Label(frame_form, text="Usuario:", font=("Modern Sans", 12), bg="#605c74", fg="white").grid(row=0, column=0, padx=10, pady=10, sticky="e")
+tk.Entry(frame_form, textvariable=usuario_var, font=("Arial", 12), width=25, bg="#c0bccc", fg="#000000").grid(row=0, column=1, padx=10, pady=10)
+
+
+# Campo de Contraseña
+tk.Label(frame_form, text="Contraseña:", font=("Modern Sans", 12), bg="#605c74", fg="white").grid(row=1, column=0, padx=10, pady=10, sticky="e")
+tk.Entry(frame_form, textvariable=contrasena_var, font=("Arial", 12), width=25, bg="#c0bccc", fg="#000000").grid(row=1, column=1, padx=10, pady=10)
+
+# Botón Iniciar Sesión
+boton_login = tk.Button(ventana_inicio, text="Login", font=("Modern Sans", 12), bg="#605c74", fg="white", command=iniciar_sesion)
+boton_login.pack(pady=20)
+
+texto_olvido = tk.Label(ventana_inicio, text="¿Olvidaste tu contraseña?", font=("Modern Sans", 12), bg="#484454", fg="white", cursor="hand2")
+texto_olvido.pack(pady=1)
+texto_olvido.bind("<Button-1>", lambda e: abrir_recuperar_contrasena())
+
 
 ventana_inicio.iconphoto(True,PhotoImage(file="Logo.png"))
 
