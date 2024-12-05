@@ -1,2 +1,2 @@
 # SensiPad-Interface
-Interfaz grafica de SensiPad - UTM 2024
+Interfaz gráfica de SensiPad - UTM 2024
