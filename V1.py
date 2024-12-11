@@ -178,7 +178,7 @@ def cerrar_aplicacion():
 
 # Ventana de Inicio de Sesión
 def iniciar_sesion():
-    if usuario_var.get() == "admin" and contrasena_var.get() == "admin":
+    if usuario_var.get() == "x" and contrasena_var.get() == "x":
         ventana_inicio.destroy()
         crear_interfaz_principal()
     else:
@@ -204,8 +204,20 @@ def crear_interfaz_principal():
     # Crear la ventana principal
     root = tk.Tk()
     root.title("SensiPad")
-    root.geometry("900x900")
+    root.geometry("900x750")
     root.protocol("WM_DELETE_WINDOW", cerrar_aplicacion)
+    root.configure(bg="#FFFFFF")
+
+    barraM = tk.Frame(root, bg="#484454", relief="raised", bd=0)
+    barraM.pack(fill="x", pady=5)
+    
+    # Crear un Label en la barra de título
+    tituloM = tk.Label(barraM, text="Login", fg="white", bg="#484454")
+    tituloM.pack(side="left", padx=10)
+
+    # Permitir mover la ventana con la barra de título
+    barraM.bind("<Button-1>", iniciar_arrastre)  # Iniciar el arrastre
+    barraM.bind("<B1-Motion>", mover_ventana)  # Mover la ventana
 
     # Variables para la información del paciente
     nombre_var = tk.StringVar()
@@ -217,45 +229,67 @@ def crear_interfaz_principal():
     actividad_var = tk.StringVar()
     destinatario_var = tk.StringVar()
 
+    # Crear la barra lateral
+    barra_lateral = tk.Frame(root, bg="#4A889C", width=200)
+    barra_lateral.pack(side="left", fill="y")
+
+# Cargar las imágenes
+    img1 = tk.PhotoImage(file="PDF.png")  # Reemplaza con la ruta real
+    img2 = tk.PhotoImage(file="Correo.png")  # Reemplaza con la ruta real
+    img3 = tk.PhotoImage(file="Ques.png")  # Reemplaza con la ruta real
+    img4 = tk.PhotoImage(file="expan.png")  # Reemplaza con la ruta real
+
+# Crear botones con imágenes
+    btn1 = tk.Button(barra_lateral, image=img1,command=generar_pdf, bg="#4A889C", bd=0)
+    btn1.pack(pady=10, padx=10, fill="x")
+
+    btn2 = tk.Button(barra_lateral, image=img2, command=enviar_correo, bg="#4A889C", bd=0)
+    btn2.pack(pady=10, padx=10, fill="x")
+
+    btn3 = tk.Button(barra_lateral, image=img3, command=mostrar_informacion, bg="#4A889C", bd=0)
+    btn3.pack(pady=10, padx=10, fill="x")
+
+    btn4 = tk.Button(barra_lateral, image=img4, command=lambda: print("Imagen 4 presionada"), bg="#4A889C", bd=0)
+    btn4.pack(pady=10, padx=10, fill="x")
+
+    encabezado = tk.Label(root, text="SensiPad", font=("Code Saver",35), bg="#FFFFFF", fg="#0C3256")
+    encabezado.pack(pady=1)
+    subtitulo = tk.Label(root, text="Datos del usuario", font=("Modern Sans", 14), bg="#FFFFFF", fg="#0C3256")
+    subtitulo.pack(pady=1)
+
     # Cuadros de texto y labels organizados
-    frame_info = tk.Frame(root)
+    frame_info = tk.Frame(root, bg="white")
     frame_info.pack(pady=10)
 
     # Fila 1 (Nombre,Edad)
-    tk.Label(frame_info, text="Nombre:").grid(row=0, column=0, padx=5, pady=5, sticky="e")
+    tk.Label(frame_info, text="Nombre:", bg="white").grid(row=0, column=0, padx=5, pady=5, sticky="e")
     tk.Entry(frame_info, textvariable=nombre_var, width=30).grid(row=0, column=1, columnspan=3, sticky="ew", padx=5, pady=5)
 
 
-    tk.Label(frame_info, text="Edad:").grid(row=0, column=4, padx=5, pady=5, sticky="e")
+    tk.Label(frame_info, text="Edad:", bg="white").grid(row=0, column=4, padx=5, pady=5, sticky="e")
     tk.Entry(frame_info, textvariable=edad_var).grid(row=0, column=5, padx=5, pady=5)
 
    # Fila 2 (Sexo, Peso, Altura)
-    tk.Label(frame_info, text="Sexo:").grid(row=1, column=0, padx=5, pady=5, sticky="e")    
+    tk.Label(frame_info, text="Sexo:", bg="white").grid(row=1, column=0, padx=5, pady=5, sticky="e")    
     tk.Entry(frame_info, textvariable=sexo_var).grid(row=1, column=1, padx=5, pady=5)
 
-    tk.Label(frame_info, text="Peso:").grid(row=1, column=2, padx=5, pady=5, sticky="e")
+    tk.Label(frame_info, text="Peso:", bg="white").grid(row=1, column=2, padx=5, pady=5, sticky="e")
     tk.Entry(frame_info, textvariable=peso_var).grid(row=1, column=3, padx=5, pady=5)
 
-    tk.Label(frame_info, text="Altura:").grid(row=1, column=4, padx=5, pady=5, sticky="e")
+    tk.Label(frame_info, text="Altura:", bg="white").grid(row=1, column=4, padx=5, pady=5, sticky="e")
     tk.Entry(frame_info, textvariable=altura_var).grid(row=1, column=5, padx=5, pady=5)
 
     # Fila 3 (Actividad física)
-    tk.Label(frame_info, text="Actividad física:").grid(row=2, column=0, padx=5, pady=5, sticky="e")
+    tk.Label(frame_info, text="Actividad física:", bg="white").grid(row=2, column=0, padx=5, pady=5, sticky="e")
     tk.Entry(frame_info, textvariable=actividad_var).grid(row=2, column=1, columnspan=5, sticky="ew",padx=5, pady=5)
 
     # Fila 4 (Diagnóstico previo)
-    tk.Label(frame_info, text="Diagnóstico previo:").grid(row=3, column=0, padx=5, pady=5, sticky="e")
+    tk.Label(frame_info, text="Diagnóstico previo:", bg="white").grid(row=3, column=0, padx=5, pady=5, sticky="e")
     tk.Entry(frame_info, textvariable=diagnostico_var).grid(row=3, column=1, columnspan=5, sticky="ew",padx=5, pady=5)
 
     # Fila 5 (Correo)
-    tk.Label(frame_info, text="Correo:").grid(row=4, column=0, padx=5, pady=5, sticky="e")
+    tk.Label(frame_info, text="Correo:", bg="white").grid(row=4, column=0, padx=5, pady=5, sticky="e")
     tk.Entry(frame_info, textvariable=destinatario_var).grid(row=4, column=1, columnspan=5, sticky="ew",padx=5, pady=5)
-
-    # Botones
-    tk.Button(frame_info, text="Generar PDF", command=generar_pdf).grid(row=5, column=1, padx=5, pady=5, sticky="e")
-    tk.Button(frame_info, text="Mostrar Información", command=mostrar_informacion).grid(row=5, column=2, padx=5, pady=5, sticky="e")
-    tk.Button(frame_info, text="Correo", command=enviar_correo).grid(row=5, column=3, padx=5, pady=5, sticky="e")
-
 
     fig, axes = plt.subplots(1, 2, figsize=(10, 5), gridspec_kw={'width_ratios': [1, 1.1]})
 # Nota: el ajuste en `width_ratios` permite compensar el espacio de la barra de color.
