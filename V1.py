@@ -234,10 +234,10 @@ def crear_interfaz_principal():
     barra_lateral.pack(side="left", fill="y")
 
 # Cargar las imágenes
-    img1 = tk.PhotoImage(file="PDF.png")  # Reemplaza con la ruta real
-    img2 = tk.PhotoImage(file="Correo.png")  # Reemplaza con la ruta real
-    img3 = tk.PhotoImage(file="Ques.png")  # Reemplaza con la ruta real
-    img4 = tk.PhotoImage(file="expan.png")  # Reemplaza con la ruta real
+    img1 = tk.PhotoImage(file="PDF.png") 
+    img2 = tk.PhotoImage(file="Correo.png") 
+    img3 = tk.PhotoImage(file="Ques.png") 
+    img4 = tk.PhotoImage(file="expan.png")  
 
 # Crear botones con imágenes
     btn1 = tk.Button(barra_lateral, image=img1,command=generar_pdf, bg="#4A889C", bd=0)
