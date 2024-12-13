@@ -17,6 +17,8 @@ import os
 from dotenv import load_dotenv
 from tkinter import font
 
+estado = 0 
+
 load_dotenv()
 
 #Tamaño de pantalla
@@ -198,26 +200,77 @@ def abrir_recuperar_contrasena():
 
 # Crear la ventana principal
 
+def cambio_VG():
+    global root
+
+    def on_resize(event):
+        # Obtener el tamaño actual de la ventana
+        width = event.width / 100
+        height = event.height / 100
+        # Ajustar el tamaño de la figura
+        fig.set_size_inches(width, height)
+        canvas.draw()
+
+    # Ocultar la ventana principal
+    root.withdraw()
+
+    # Crear ventana de muestra
+    nueva_ventana = tk.Toplevel()
+    nueva_ventana.title("Muestra")
+    nueva_ventana.geometry("500x500")
+
+    fig, axes = plt.subplots(1, 2, figsize=(8, 5), gridspec_kw={'width_ratios': [1, 1.1]})
+
+    # Subplot del pie izquierdo
+    c1 = axes[0].imshow(z_left, cmap='jet', interpolation='bilinear')
+    axes[0].set_title('Pie Izquierdo')
+    axes[0].axis('off')
+
+    # Subplot del pie derecho
+    c2 = axes[1].imshow(z_right, cmap='jet', interpolation='bilinear')
+    axes[1].set_title('Pie Derecho')
+    axes[1].axis('off')
+
+    # Barra de color para el segundo gráfico
+    fig.colorbar(c2, ax=axes[1], fraction=0.046, pad=0.04)
+
+    # Ajustar el diseño para que los subplots queden alineados
+    plt.tight_layout()
+
+    # Agregar la figura al lienzo de Tkinter
+    canvas = FigureCanvasTkAgg(fig, master=nueva_ventana)
+    canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+    canvas.draw()
+
+    # Vincular el evento de redimensionamiento
+    nueva_ventana.bind('<Configure>', on_resize)
+
+    # Volver a ventana principal
+    def cerrar_nueva_ventana():
+        nueva_ventana.destroy()
+        root.deiconify()
+
+    nueva_ventana.protocol("WM_DELETE_WINDOW", cerrar_nueva_ventana)
+
+
+
 def crear_interfaz_principal():
-    global root, nombre_var, edad_var, sexo_var, peso_var, altura_var, diagnostico_var, actividad_var , destinatario_var
+    global root, nombre_var, edad_var, sexo_var, peso_var, altura_var, diagnostico_var, actividad_var , destinatario_var 
+    global barra_lateral, canvas
 
     # Crear la ventana principal
     root = tk.Tk()
     root.title("SensiPad")
     root.geometry("900x750")
+    ventana_width = 900
+    ventana_height = 750
+    pantalla_width = root.winfo_screenwidth()
+    pantalla_height = root.winfo_screenheight()
+    pos_x = (pantalla_width // 2) - (ventana_width // 2)
+    pos_y = (pantalla_height // 2) - (ventana_height // 2)
+    root.geometry(f"{ventana_width}x{ventana_height}+{pos_x}+{pos_y}")
     root.protocol("WM_DELETE_WINDOW", cerrar_aplicacion)
     root.configure(bg="#FFFFFF")
-
-    barraM = tk.Frame(root, bg="#484454", relief="raised", bd=0)
-    barraM.pack(fill="x", pady=5)
-    
-    # Crear un Label en la barra de título
-    tituloM = tk.Label(barraM, text="Login", fg="white", bg="#484454")
-    tituloM.pack(side="left", padx=10)
-
-    # Permitir mover la ventana con la barra de título
-    barraM.bind("<Button-1>", iniciar_arrastre)  # Iniciar el arrastre
-    barraM.bind("<B1-Motion>", mover_ventana)  # Mover la ventana
 
     # Variables para la información del paciente
     nombre_var = tk.StringVar()
@@ -249,7 +302,7 @@ def crear_interfaz_principal():
     btn3 = tk.Button(barra_lateral, image=img3, command=mostrar_informacion, bg="#4A889C", bd=0)
     btn3.pack(pady=10, padx=10, fill="x")
 
-    btn4 = tk.Button(barra_lateral, image=img4, command=lambda: print("Imagen 4 presionada"), bg="#4A889C", bd=0)
+    btn4 = tk.Button(barra_lateral, image=img4, command=cambio_VG, bg="#4A889C", bd=0)
     btn4.pack(pady=10, padx=10, fill="x")
 
     encabezado = tk.Label(root, text="SensiPad", font=("Code Saver",35), bg="#FFFFFF", fg="#0C3256")
