@@ -99,6 +99,7 @@ def generar_pdf():
     # Guardar el archivo PDF
     nombre_archivo = f"Informe_{nombre_var.get()}.pdf"
     pdf.output(nombre_archivo)
+    messagebox.showinfo("Información", "El documento fue creado correctamente")
 
 def enviar_correo():
     generar_pdf()
@@ -108,7 +109,7 @@ def enviar_correo():
         destinatario = f"{destinatario_var.get()}"
         
         # Obtener el nombre del archivo desde la variable de entrada
-        nombre_archivo = f"Informe_{nombre_var.get()}.pdf"  # Aquí tomamos el nombre de la entrada
+        nombre_archivo = f"Informe_{nombre_var.get()}.pdf" 
         
         # Crear el mensaje
         msg = MIMEMultipart()
@@ -131,7 +132,7 @@ def enviar_correo():
 
 
         # Ruta del archivo
-        archivo_path = nombre_archivo  # Usamos el nombre definido dinámicamente
+        archivo_path = nombre_archivo  
         attachment = open(archivo_path, 'rb')
 
         part = MIMEBase('application', 'octet-stream')
@@ -144,7 +145,7 @@ def enviar_correo():
         # Conectar con el servidor SMTP de Gmail
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
-        server.login(remitente,password)  # Usa tu contraseña o una contraseña de aplicación si es necesario
+        server.login(remitente,password) 
 
         # Enviar el correo
         server.sendmail(remitente, destinatario, msg.as_string())
@@ -160,20 +161,60 @@ def enviar_correo():
 def mostrar_informacion():
     info = tk.Toplevel(root)
     info.title("Información de Padecimientos")
-    info.geometry("500x300")
+    info.geometry("700x800")
+    info.configure(bg="#FFFFFF")
 
-    # Crear una tabla de información
+    encabezado = tk.Label(info, text="Padecimientos comunes", font=("Code Saver",35), bg="#FFFFFF", fg="#0C3256")
+    encabezado.pack(pady=1)
+ 
+
     texto = (
-        "1. Pie Plano: Arco del pie colapsado, común en niños y adultos.\n"
-        "2. Fascitis Plantar: Inflamación del tejido en la planta del pie.\n"
-        "3. Espolón Calcáneo: Crecimiento óseo en el talón, causado por tensión.\n"
-        "4. Metatarsalgia: Dolor en la parte delantera del pie, asociado a sobrepeso.\n"
+        "1. Pie Plano: El pie plano se caracteriza por la pérdida del arco del pie, lo que causa que toda la planta del pie \n"
+        "toque el suelo al caminar. Este trastorno es común tanto en niños como en adultos. El pie plano puede causar dolor \n"
+        "en los talones y en la parte media del pie, así como dificultad para caminar largas distancias. Las personas con pie \n"
+        "plano pueden experimentar problemas adicionales como la inestabilidad o el dolor en las rodillas.\n\n"
+        
+        "2. Fascitis Plantar: Es una de las principales causas de dolor en el talón. Se trata de una inflamación del tejido \n"
+        "que conecta el talón con los dedos, conocido como la fascia plantar. Esta afección se desarrolla cuando la fascia se \n"
+        "irrita o se lesiona debido a un uso excesivo, mala alineación al caminar o estar mucho tiempo de pie. Los síntomas incluyen \n"
+        "dolor en el talón, especialmente al levantarse por la mañana, o después de estar mucho tiempo sentado.\n\n"
+        
+        "3. Espolón Calcáneo: Un espolón calcáneo es una protuberancia ósea que se forma en el talón como resultado de la tensión \n"
+        "prolongada en la fascia plantar, lo que lleva a una acumulación de calcio. Aunque el espolón calcáneo no siempre causa dolor, \n"
+        "cuando lo hace, generalmente se experimenta un dolor punzante en la base del talón al caminar o estar de pie por períodos largos. \n"
+        "El tratamiento incluye el uso de plantillas ortopédicas, cambios en el calzado o, en casos severos, cirugía.\n\n"
+        
+        "4. Metatarsalgia: Se refiere a un dolor generalizado en la parte delantera del pie, particularmente en la zona de los dedos \n"
+        "y la base de los metatarsos. Esta afección es común en personas que tienen sobrepeso, usan zapatos incómodos o realizan \n"
+        "actividades de alto impacto. El dolor puede intensificarse al caminar o correr, y los síntomas incluyen inflamación y enrojecimiento \n"
+        "de la zona afectada. El tratamiento puede incluir reposo, el uso de zapatos adecuados, y en algunos casos, la terapia física.\n\n"
+        
+        "5. Hallux Valgus (Juanete): Un juanete es una deformidad en la base del dedo gordo del pie, que puede causar dolor y \n"
+        "dificultad para caminar. Se forma cuando el hueso o los tejidos blandos en la parte frontal del pie se desalinean, lo que \n"
+        "resulta en un bulto en la zona. Los juanetes son más comunes en personas que usan zapatos apretados, pero también pueden \n"
+        "ser causados por factores hereditarios o problemas en la estructura del pie. El tratamiento incluye ortesis, terapia física o \n"
+        "cirugía en casos graves.\n\n"
+        
+        "6. Neuroma de Morton: Esta afección se caracteriza por la formación de un bulto benigno en los nervios entre los dedos \n"
+        "del pie, generalmente entre el tercero y cuarto dedo. Puede causar dolor, hormigueo o sensación de ardor en los dedos del pie. \n"
+        "El neuroma es más común en mujeres y puede ser provocado por el uso de zapatos estrechos. El tratamiento varía desde el uso de \n"
+        "plantillas ortopédicas hasta cirugía en casos severos.\n\n"
+        
+        "7. Tendinitis Aquilea: Es la inflamación del tendón de Aquiles, que conecta el talón con los músculos de la pantorrilla. \n"
+        "La tendinitis puede ser causada por el uso excesivo, especialmente en actividades deportivas que requieren mucho esfuerzo de \n"
+        "la pantorrilla, como correr o saltar. Los síntomas incluyen dolor en la parte posterior del tobillo, hinchazón y rigidez. \n"
+        "El tratamiento incluye reposo, terapia física y en algunos casos, cirugía.\n\n"
+        
+        "8. Síndrome de Túnel Tarsiano: Esta condición se produce cuando el nervio tibial se comprime en el túnel tarsiano, \n"
+        "situado en el lado interno del tobillo. Los síntomas incluyen dolor, hormigueo y debilidad en el pie o los dedos. \n"
+        "Este trastorno es menos común que el síndrome del túnel carpiano, pero puede ser igualmente debilitante. El tratamiento \n"
+        "puede incluir el uso de férulas, medicamentos antiinflamatorios o cirugía en casos graves.\n\n"
     )
-    label_info = tk.Label(info, text=texto, justify="left", padx=10, pady=10)
-    label_info.pack()
 
-    boton_cerrar = tk.Button(info, text="Cerrar", command=info.destroy)
-    boton_cerrar.pack()
+    # Crear un widget de texto con la información
+    label_info = tk.Label(info, text=texto, justify="left", padx=10, pady=10, bg="#FFFFFF")
+    label_info.pack(fill="both", expand=True)
+
 
 def cerrar_aplicacion():
     root.destroy()
@@ -187,7 +228,7 @@ def iniciar_sesion():
         messagebox.showerror("Error", "Usuario o contraseña incorrectos")
 
 def abrir_recuperar_contrasena():
-    # Crear una nueva ventana para recuperar contraseña
+    
     ventana_recuperar = tk.Toplevel(ventana_inicio)
     ventana_recuperar.title("Recuperar Contraseña")
     ventana_recuperar.geometry("300x200")
@@ -199,6 +240,10 @@ def abrir_recuperar_contrasena():
     tk.Button(ventana_recuperar, text="Enviar", font=("Arial", 12, "bold"), bg="#0b3d91", fg="white").pack(pady=20)
 
 # Crear la ventana principal
+
+import tkinter as tk
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 def cambio_VG():
     global root
@@ -217,8 +262,11 @@ def cambio_VG():
     # Crear ventana de muestra
     nueva_ventana = tk.Toplevel()
     nueva_ventana.title("Muestra")
-    nueva_ventana.geometry("500x500")
 
+    # Maximizar la ventana sin hacerlo de pantalla completa
+    nueva_ventana.state('zoomed') 
+
+    # Crear la figura de los gráficos
     fig, axes = plt.subplots(1, 2, figsize=(8, 5), gridspec_kw={'width_ratios': [1, 1.1]})
 
     # Subplot del pie izquierdo
@@ -245,14 +293,12 @@ def cambio_VG():
     # Vincular el evento de redimensionamiento
     nueva_ventana.bind('<Configure>', on_resize)
 
-    # Volver a ventana principal
+    # Volver a la ventana principal
     def cerrar_nueva_ventana():
         nueva_ventana.destroy()
         root.deiconify()
 
     nueva_ventana.protocol("WM_DELETE_WINDOW", cerrar_nueva_ventana)
-
-
 
 def crear_interfaz_principal():
     global root, nombre_var, edad_var, sexo_var, peso_var, altura_var, diagnostico_var, actividad_var , destinatario_var 
@@ -345,7 +391,6 @@ def crear_interfaz_principal():
     tk.Entry(frame_info, textvariable=destinatario_var).grid(row=4, column=1, columnspan=5, sticky="ew",padx=5, pady=5)
 
     fig, axes = plt.subplots(1, 2, figsize=(10, 5), gridspec_kw={'width_ratios': [1, 1.1]})
-# Nota: el ajuste en `width_ratios` permite compensar el espacio de la barra de color.
 
 # Subplot del pie izquierdo
     c1 = axes[0].imshow(z_left, cmap='jet', interpolation='bilinear')
@@ -371,13 +416,11 @@ def crear_interfaz_principal():
     root.mainloop()
 
 def mover_ventana(event):
-    # Calculamos la diferencia entre la posición del puntero y la posición inicial del clic
     nueva_x = ventana_inicio.winfo_x() + event.x - offset_x
     nueva_y = ventana_inicio.winfo_y() + event.y - offset_y
     ventana_inicio.geometry(f"+{nueva_x}+{nueva_y}")
 
 def iniciar_arrastre(event):
-    # Guardamos la diferencia entre la posición del puntero y la esquina superior izquierda de la ventana
     global offset_x, offset_y
     offset_x = event.x
     offset_y = event.y
@@ -399,15 +442,12 @@ ventana_inicio.overrideredirect(True)
 
 barra_titulo = tk.Frame(ventana_inicio, bg="#484454", relief="raised", bd=0)
 barra_titulo.pack(fill="x", pady=5)
-# Crear un Label en la barra de título
 titulo = tk.Label(barra_titulo, text="Login", fg="white", bg="#484454")
 titulo.pack(side="left", padx=10)
 
-# Permitir mover la ventana con la barra de título
-barra_titulo.bind("<Button-1>", iniciar_arrastre)  # Iniciar el arrastre
-barra_titulo.bind("<B1-Motion>", mover_ventana)  # Mover la ventana
+barra_titulo.bind("<Button-1>", iniciar_arrastre)  
+barra_titulo.bind("<B1-Motion>", mover_ventana)  
 
-# Variables de inicio de sesión
 usuario_var = tk.StringVar()
 contrasena_var = tk.StringVar()
 
@@ -416,7 +456,6 @@ encabezado = tk.Label(ventana_inicio, text="USER LOGIN", font=("Code Saver",35),
 encabezado.pack(pady=1)
 subtitulo = tk.Label(ventana_inicio, text="Bienvenido a SensiPad", font=("Modern Sans", 14), bg="#484454", fg="white")
 subtitulo.pack(pady=1)
-
 
 # Crear marco con esquinas redondeadas
 def create_rounded_frame(parent, width, height, radius=20, bg_color="#605c74"):
@@ -430,9 +469,7 @@ def create_rounded_frame(parent, width, height, radius=20, bg_color="#605c74"):
     canvas.create_rectangle((radius, 0, width - radius, height), fill=bg_color, outline=bg_color)
     canvas.create_rectangle((0, radius, width, height - radius), fill=bg_color, outline=bg_color)
 
-    # Retornar canvas
     return canvas
-
 
 # Marco del formulario
 frame_width = 400
@@ -448,7 +485,6 @@ frame_form.place(x=10, y=10, width=frame_width - 20, height=frame_height - 20)
 tk.Label(frame_form, text="Usuario:", font=("Modern Sans", 12), bg="#605c74", fg="white").grid(row=0, column=0, padx=10, pady=10, sticky="e")
 tk.Entry(frame_form, textvariable=usuario_var, font=("Arial", 12), width=25, bg="#c0bccc", fg="#000000").grid(row=0, column=1, padx=10, pady=10)
 
-
 # Campo de Contraseña
 tk.Label(frame_form, text="Contraseña:", font=("Modern Sans", 12), bg="#605c74", fg="white").grid(row=1, column=0, padx=10, pady=10, sticky="e")
 tk.Entry(frame_form, textvariable=contrasena_var, font=("Arial", 12), width=25, bg="#c0bccc", fg="#000000").grid(row=1, column=1, padx=10, pady=10)
@@ -460,7 +496,6 @@ boton_login.pack(pady=20)
 texto_olvido = tk.Label(ventana_inicio, text="¿Olvidaste tu contraseña?", font=("Modern Sans", 12), bg="#484454", fg="white", cursor="hand2")
 texto_olvido.pack(pady=1)
 texto_olvido.bind("<Button-1>", lambda e: abrir_recuperar_contrasena())
-
 
 ventana_inicio.iconphoto(True,PhotoImage(file="Logo.png"))
 
